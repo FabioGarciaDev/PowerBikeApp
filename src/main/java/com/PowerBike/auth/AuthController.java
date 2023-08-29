@@ -1,15 +1,10 @@
 package com.PowerBike.auth;
 
 
-import com.PowerBike.auth.AuthResponse;
-import com.PowerBike.auth.LoginRequest;
-import com.PowerBike.auth.RegisterRequest;
-import com.PowerBike.auth.AuthService;
+import com.PowerBike.service.RecoveryPasswordService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,14 +14,25 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final AuthService authService;
+    private final RecoveryPasswordService recoveryPasswordService;
 
     @PostMapping(value = "login")
-    public ResponseEntity<AuthResponse> login (@RequestBody LoginRequest request){
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<AuthResponse> login (@RequestBody LoginDto dto){
+        return ResponseEntity.ok(authService.login(dto));
     }
 
     @PostMapping(value = "register")
-    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterDto dto){
+        return ResponseEntity.ok(authService.register(dto));
+    }
+
+    @PostMapping(value = "forgotPassword")
+    public ResponseEntity<?> forgotPassword(@RequestParam("email") String email){
+        return new ResponseEntity(recoveryPasswordService.forgotPassword(email), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody RegisterDto dto){
+        return null;
     }
 }

@@ -1,8 +1,5 @@
 package com.PowerBike.auth;
 
-import com.PowerBike.auth.AuthResponse;
-import com.PowerBike.auth.LoginRequest;
-import com.PowerBike.auth.RegisterRequest;
 import com.PowerBike.entity.ERole;
 import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.UserRepository;
@@ -27,7 +24,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(LoginDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
         UserDetails user=userRepository.findByEmail(request.getUsername()).orElseThrow();
         UserEntity userEntity = userRepository.findByEmail(request.username).orElseThrow();
@@ -41,7 +38,7 @@ public class AuthService {
     }
 
     //Metodo para registar un usuario y se retorna datos para front
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterDto request) {
 
         //Capturo fecha String y la convierto a LocalDate para almacenar el usuario
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/v1/email/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessions->
