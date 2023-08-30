@@ -1,14 +1,17 @@
 package com.PowerBike.service;
 
+import com.PowerBike.dto.ResetPasswordDTO;
 import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -28,6 +31,7 @@ public class RecoveryPasswordService {
     private final JavaMailSender javaMailSender;
     private final TemplateEngine templateEngine;
     private final UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public String forgotPassword(String email){
         if (!userRepository.existsByEmail(email)){
@@ -43,7 +47,7 @@ public class RecoveryPasswordService {
             Map<String, Object> variablesTemplate = new HashMap<>();
             variablesTemplate.put("username",userEntity.getName());
             variablesTemplate.put("emailUsername",userEntity.getEmail());
-            variablesTemplate.put("urlFront",urlFront);
+            variablesTemplate.put("url",urlFront);
             variablesTemplate.put("recoveryPassword",userEntity.getRecoveryPassword());
             context.setVariables(variablesTemplate);
             String htmlText = templateEngine.process("recoveryPasswordTemplate", context);
@@ -58,6 +62,20 @@ public class RecoveryPasswordService {
             e.printStackTrace();
         }
         return "Correo de recuperacion enviado con exito";
+    }
+
+    public String resetPassword(ResetPasswordDTO dto){
+        if (!userRepository.existsByEmail(dto.getEmail())
+                && !userRepository.existsByRecoveryPassword(dto.getRecoveryPassword())){
+            return "Las credenciales no son validas";
+        }
+        UserEntity userEntity = userRepository.findByEmail(dto.getEmail()).orElseThrow();
+        if (userEntity.getRecoveryPassword().equals(dto.getRecoveryPassword())){
+            userEntity.setPassword(bCryptPasswordEncoder.encode(dto.getResetPassword()));
+            userEntity.setRecoveryPassword(null);
+            userRepository.save(userEntity);
+        }
+        return "El usuario actualizo correctamente su contraseña";
     }
 
 }

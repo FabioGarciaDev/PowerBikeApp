@@ -15,4 +15,7 @@ public interface UserRepository extends CrudRepository<UserEntity,Long> {
     Optional<UserEntity> getName(String email);
 
     boolean existsByEmail(String email) ;
+
+    boolean existsByRecoveryPassword(String recoveryPassword);
+
 }

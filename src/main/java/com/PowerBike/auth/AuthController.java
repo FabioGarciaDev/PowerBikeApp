@@ -1,6 +1,7 @@
 package com.PowerBike.auth;
 
 
+import com.PowerBike.dto.ResetPasswordDTO;
 import com.PowerBike.service.RecoveryPasswordService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "resetPassword")
-    public ResponseEntity<?> resetPassword(@RequestBody RegisterDto dto){
-        return null;
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO dto){
+        return new ResponseEntity(recoveryPasswordService.resetPassword(dto), HttpStatus.OK);
     }
 }
