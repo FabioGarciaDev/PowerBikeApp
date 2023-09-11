@@ -1,5 +1,8 @@
-package com.PowerBike.auth;
+package com.PowerBike.service;
 
+import com.PowerBike.dto.AuthResponseDto;
+import com.PowerBike.dto.LoginDto;
+import com.PowerBike.dto.RegisterDto;
 import com.PowerBike.entity.ERole;
 import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.UserRepository;
@@ -17,28 +20,30 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class LoginRegisterService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse login(LoginDto request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
+    public AuthResponseDto login(LoginDto request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername()
+                ,request.getPassword()));
         UserDetails user=userRepository.findByEmail(request.getUsername()).orElseThrow();
-        UserEntity userEntity = userRepository.findByEmail(request.username).orElseThrow();
+        UserEntity userEntity = userRepository.findByEmail(request.getUsername()).orElseThrow();
         String token=jwtService.getToken(user);
-        return AuthResponse.builder()
+        return AuthResponseDto.builder()
                 .message("Inicio de sesion correcto")
                 .name(userEntity.getName())
+                .userId(userEntity.getIdUser())
                 .role(String.valueOf(userEntity.getRole()))
                 .token(token)
                 .build();
     }
 
     //Metodo para registar un usuario y se retorna datos para front
-    public AuthResponse register(RegisterDto request) {
+    public AuthResponseDto register(RegisterDto request) {
 
         //Capturo fecha String y la convierto a LocalDate para almacenar el usuario
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -66,12 +71,12 @@ public class AuthService {
 
         userRepository.save(userEntity);
 
-        return AuthResponse.builder()
+        return AuthResponseDto.builder()
                 .message("Usuario Registrado con exito")
                 .name(userEntity.getName())
+                .userId(userEntity.getIdUser())
                 .role(String.valueOf(userEntity.getRole()))
                 .token(jwtService.getToken(userEntity))
                 .build();
     }
-
 }

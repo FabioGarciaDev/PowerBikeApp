@@ -1,4 +1,4 @@
-package com.PowerBike.auth;
+package com.PowerBike.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
+public class AuthResponseDto {
     String message;
     String name;
+    Long userId;
     String role;
     String token;
 }

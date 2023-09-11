@@ -1,4 +1,4 @@
-package com.PowerBike.auth;
+package com.PowerBike.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

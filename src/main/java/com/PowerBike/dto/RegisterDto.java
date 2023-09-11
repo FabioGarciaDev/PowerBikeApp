@@ -1,4 +1,4 @@
-package com.PowerBike.auth;
+package com.PowerBike.dto;
 
 import com.PowerBike.entity.ERole;
 import jakarta.validation.constraints.Email;
