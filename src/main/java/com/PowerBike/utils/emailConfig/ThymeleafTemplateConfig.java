@@ -1,4 +1,4 @@
-package com.PowerBike.email.config;
+package com.PowerBike.utils.emailConfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

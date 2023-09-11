@@ -3,6 +3,7 @@ package com.PowerBike.auth;
 
 import com.PowerBike.dto.ResetPasswordDTO;
 import com.PowerBike.service.RecoveryPasswordService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class AuthController {
     private final RecoveryPasswordService recoveryPasswordService;
 
     @PostMapping(value = "login")
-    public ResponseEntity<AuthResponse> login (@RequestBody LoginDto dto){
+    public ResponseEntity<AuthResponse> login (@RequestBody @Valid LoginDto dto){
         return ResponseEntity.ok(authService.login(dto));
     }
 
     @PostMapping(value = "register")
-    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterDto dto){
+    public ResponseEntity<AuthResponse> registerUser(@RequestBody @Valid RegisterDto dto){
         return ResponseEntity.ok(authService.register(dto));
     }
 
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping(value = "resetPassword")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO dto){
+    public ResponseEntity<?> resetPassword(@RequestBody @Valid ResetPasswordDTO dto){
         return new ResponseEntity(recoveryPasswordService.resetPassword(dto), HttpStatus.OK);
     }
 }

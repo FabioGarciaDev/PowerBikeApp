@@ -3,7 +3,7 @@ package com.PowerBike.auth;
 import com.PowerBike.entity.ERole;
 import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.UserRepository;
-import com.PowerBike.securityConfig.jwt.JwtService;
+import com.PowerBike.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

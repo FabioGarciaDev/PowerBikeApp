@@ -1,4 +1,4 @@
-package com.PowerBike.securityConfig;
+package com.PowerBike.security;
 
 import com.PowerBike.repository.UserRepository;
 import org.springframework.context.annotation.Bean;

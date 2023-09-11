@@ -14,9 +14,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterDto {
+
     @NotBlank
     private String name;
 
+    @NotBlank
     private String lastname;
 
     private String secondLastname;
@@ -51,6 +53,7 @@ public class RegisterDto {
     @NotBlank
     private String city;
 
+    @NotBlank
     private String dateOfBirth;
     /*//Con este metodo debo parsear la fecha de nacimiento ingresado por el usuario
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
