@@ -69,9 +69,6 @@ public class UserEntity implements UserDetails {
     private String city;
 
     private LocalDate dateOfBirth;
-    /*//Con este metodo debo parsear la fecha de nacimiento ingresado por el usuario
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate dateOfBirth = LocalDate.parse(dateOfBirthString, formatter);*/
 
     private String idCard;
 
@@ -80,6 +77,10 @@ public class UserEntity implements UserDetails {
     private boolean activeUser;
 
     private ERole role;
+
+    //Relaciones Tablas
+    @OneToOne(targetEntity = MedicalRecord.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private MedicalRecord medicalRecord;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

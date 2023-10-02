@@ -3,7 +3,6 @@ package com.PowerBike.service;
 import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
