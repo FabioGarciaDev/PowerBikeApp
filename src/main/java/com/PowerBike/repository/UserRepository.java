@@ -14,6 +14,8 @@ public interface UserRepository extends CrudRepository<UserEntity,Long> {
 
     boolean existsByEmail(String email) ;
 
+    boolean existsById(long id);
+
     boolean existsByRecoveryPassword(String recoveryPassword);
 
     /*@Query("select u from UserEntity u where u.email = ?1")

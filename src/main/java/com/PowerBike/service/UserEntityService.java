@@ -1,5 +1,6 @@
 package com.PowerBike.service;
 
+import com.PowerBike.dto.UserUpdateDto;
 import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,6 @@ public class UserEntityService {
             return new ResponseEntity("No hay usuarios Registrados", HttpStatus.NOT_FOUND);
         }
             return new ResponseEntity(users, HttpStatus.OK);
-
     }
 
     //     Metodo para traer un user por ID
@@ -47,14 +47,22 @@ public class UserEntityService {
         return new ResponseEntity("No se pudo eliminar, usuario no existe", HttpStatus.BAD_REQUEST);
     }
 
-//    @Override
-//    public User updateUser(Long id, User updatedUser) {
-//        if (userRepository.existsById(id)) {
-//            updatedUser.setId(id);
-//            return userRepository.save(updatedUser);
-//        }
-//        return null;
-//    }
+    public ResponseEntity updateUser(long id, UserUpdateDto dto){
+        if (userRepository.existsById(id)) {
+            UserEntity user = userRepository.findById(id).orElseThrow();
+            user.setGender(dto.getGender());
+            user.setPhoneNumber(dto.getPhoneNumber());
+            user.setAddress(dto.getAddress());
+            user.setCity(dto.getCity());
+            userRepository.save(user);
+            return new ResponseEntity("El usuario a " + user.getName()+ " actualizado correctamente su informacion"
+                    ,HttpStatus.OK);
+        }
+        return new ResponseEntity("El usuario no existe", HttpStatus.BAD_REQUEST);
+    }
+    public ResponseEntity<?> existUser(long id){
+        return new ResponseEntity(userRepository.existsById(id),HttpStatus.OK);
+    }
 
 }
 

@@ -48,6 +48,10 @@ public class MedicalRecordService {
                 , HttpStatus.BAD_REQUEST);
 
     }
+
+    public ResponseEntity<?> getBloodTypes(){
+        return new ResponseEntity(EBloodType.values(), HttpStatus.OK);
+    }
     //MedicalRecord medical= medicalRecordRepository.findMedicalRegisterByUserId(dto.getIdUser());
 
 }

@@ -55,9 +55,6 @@ public class RegisterDto {
 
     @NotBlank
     private String dateOfBirth;
-    /*//Con este metodo debo parsear la fecha de nacimiento ingresado por el usuario
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate dateOfBirth = LocalDate.parse(dateOfBirthString, formatter);*/
 
     private String idCard;
 

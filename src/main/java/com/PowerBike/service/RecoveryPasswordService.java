@@ -45,7 +45,7 @@ public class RecoveryPasswordService {
             Map<String, Object> variablesTemplate = new HashMap<>();
             variablesTemplate.put("username",userEntity.getName());
             variablesTemplate.put("emailUsername",userEntity.getEmail());
-            variablesTemplate.put("url",urlFront);
+            variablesTemplate.put("urlFront",urlFront);
             variablesTemplate.put("recoveryPassword",userEntity.getRecoveryPassword());
             context.setVariables(variablesTemplate);
             String htmlText = templateEngine.process("recoveryPasswordTemplate", context);

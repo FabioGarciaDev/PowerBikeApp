@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/medicalregister/v1")
+@RequestMapping("/medicalRegister/v1")
 @RequiredArgsConstructor
 public class MedicalRecordController {
 
@@ -16,6 +16,11 @@ public class MedicalRecordController {
     @PostMapping(value = "save")
     public ResponseEntity<?> saveMedicalRegister(@RequestBody MedicalRecordDto dto){
         return medicalRecordService.saveMedicalRegister(dto);
+    }
+
+    @GetMapping(value = "allBloodTypes")
+    public ResponseEntity<?> getBloodTypes() {
+        return medicalRecordService.getBloodTypes();
     }
 
 }

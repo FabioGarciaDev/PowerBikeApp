@@ -1,21 +1,20 @@
 package com.PowerBike.controller;
 
-import com.PowerBike.entity.UserEntity;
-import com.PowerBike.repository.UserRepository;
+import com.PowerBike.dto.UserUpdateDto;
 import com.PowerBike.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user/v1")
+@RequestMapping("/v1/user")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserEntityService userEntityService;
 
     // Obtener todos los usuarios
-    @GetMapping("/allUsers")
+    @GetMapping("/getAll")
     public ResponseEntity<?> getAllUsers() {
         return userEntityService.getAllUsers();
     }
@@ -33,14 +32,14 @@ public class UserController {
     }
 
     // Operación UPDATE - Actualizar un usuario por ID
-   /* @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        if (userRepository.existsById(id)) {
-            updatedUser.setId(id); // Asegura que el ID coincida
-            User savedUser = userRepository.save(updatedUser);
-            return ResponseEntity.ok(savedUser);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
+    @PutMapping("update/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable long id, @RequestBody UserUpdateDto dto){
+        return userEntityService.updateUser(id, dto);
+    }
+
+    @GetMapping("prueba/{id}")
+    public ResponseEntity<?> existUser(@PathVariable long id) {
+        return userEntityService.existUser(id);
+    }
+
 }
