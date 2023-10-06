@@ -44,6 +44,11 @@ public class LoginRegisterService {
 
     //Metodo para registar un usuario y se retorna datos para front
     public AuthResponseDto register(RegisterDto request) {
+        if (userRepository.existsByEmail(request.getEmail())){
+            return AuthResponseDto.builder()
+                    .message("El email "+request.getEmail()+" ya esta registrado")
+                    .build();
+        }
 
         //Capturo fecha String y la convierto a LocalDate para almacenar el usuario
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
