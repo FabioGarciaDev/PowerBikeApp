@@ -4,6 +4,7 @@ import com.PowerBike.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +26,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors ->
-                        cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+                        cors.configurationSource(request -> {
+                            CorsConfiguration config = new CorsConfiguration();
+                            config.applyPermitDefaultValues();
+                            config.addAllowedMethod(HttpMethod.PUT); // Permitir el método PUT
+                            config.addAllowedMethod(HttpMethod.DELETE); // Permitir el método DELETE
+                            return config;
+                        }))
+                //.cors(cors ->
+                //        cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
                 .csrf(csfr ->
                         csfr.disable())
                 .authorizeHttpRequests(authRequest ->

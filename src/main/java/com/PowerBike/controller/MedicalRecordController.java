@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/medicalRegister/v1")
+@RequestMapping("/v1/medicalRegister")
 @RequiredArgsConstructor
 public class MedicalRecordController {
 
