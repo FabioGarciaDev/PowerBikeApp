@@ -2,9 +2,13 @@ package com.PowerBike.controller;
 
 import com.PowerBike.dto.ProductDto;
 import com.PowerBike.service.ProductService;
+import jakarta.mail.Multipart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/v1/product")
@@ -18,6 +22,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/getAllStore")
+    public ResponseEntity<?> getAllProductsStore() {
+        return productService.getAllProductsStore();
+    }
+
     @GetMapping("/getProduct/{id}")
     public ResponseEntity<?> getProduct (@PathVariable long id) {
         return productService.getProductById(id);
@@ -29,8 +38,8 @@ public class ProductController {
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity<?> saveCategory(@RequestBody ProductDto dto){
-        return productService.saveProduct(dto);
+    public ResponseEntity<?> saveCategory(@ModelAttribute ProductDto dto, @RequestPart MultipartFile image) throws IOException {
+        return productService.saveProduct(dto, image);
     }
 
     @PutMapping(value = "/desactiveProduct/{id}")
