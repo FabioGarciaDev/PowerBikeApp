@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Ignora carpeta de imagenes de productos ###
+src/main/resources/static/productImages/

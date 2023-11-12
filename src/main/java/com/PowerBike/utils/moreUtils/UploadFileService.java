@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UploadFileService {
 
     //@Value("$path.image-products")
-    private String folder = "src/main/resources/static/productImages/";
+    private final String folder = "src/main/resources/static/productImages/";
 
     public String saveImage(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {

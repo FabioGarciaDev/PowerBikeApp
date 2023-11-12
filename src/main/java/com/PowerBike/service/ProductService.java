@@ -21,6 +21,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UploadFileService uploadFileService;
+    private final String defaultImage = "default.jpg";
 
     public ResponseEntity<?> getAllProducts() {
         List<Product> products = (List<Product>) productRepository.findAll();
@@ -52,7 +53,7 @@ public class ProductService {
     public ResponseEntity<?> deleteProduct(long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
-            if (!product.getImage().equals("default,png")){
+            if (!product.getImage().equals(defaultImage)){
                 uploadFileService.deleteImage(product.getImage());
             }
             productRepository.deleteById(id);
@@ -87,7 +88,7 @@ public class ProductService {
             product.setStock(dto.getStock());
             product.setDiscount(dto.getDiscount());
 
-            if (!dto.getImage().isEmpty() && !product.getImage().equals("default.png")){
+            if (!dto.getImage().isEmpty() && !product.getImage().equals(defaultImage)){
                 uploadFileService.deleteImage(product.getImage());
                 String newImage = uploadFileService.saveImage(dto.getImage());
                 product.setImage(newImage);
