@@ -40,11 +40,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/productImages/**").permitAll()
                                 .requestMatchers("/v1/email/**").permitAll()
-                                .requestMatchers("/v3/api-docs/**","/swagger-ui/**", "/swagger-ui.html" ).permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .sessionManagement(sessions->
+                .sessionManagement(sessions ->
                         sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
