@@ -12,7 +12,7 @@ public class ProductDto {
 
     private String productName;
     private String description;
-    private String price;
+    private double price;
     private int stock;
     private double discount;
     private MultipartFile image;
