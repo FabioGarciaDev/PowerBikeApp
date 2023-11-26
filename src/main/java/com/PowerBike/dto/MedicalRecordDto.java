@@ -1,6 +1,5 @@
 package com.PowerBike.dto;
 
-import com.PowerBike.entity.EBloodType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

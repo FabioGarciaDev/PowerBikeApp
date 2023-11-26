@@ -15,7 +15,7 @@ public class MedicalRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idMedicalRecord;
+    private Long idMedicalRecord;
     private String eps;
     private EBloodType bloodType;
     private String allergies;
