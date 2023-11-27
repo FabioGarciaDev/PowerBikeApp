@@ -79,7 +79,8 @@ public class UserEntity implements UserDetails {
     private ERole role;
 
     //Relaciones Tablas
-    @OneToOne(targetEntity = MedicalRecord.class, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = MedicalRecord.class, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "id_medical_record")
     private MedicalRecord medicalRecord;
 
     @Override
