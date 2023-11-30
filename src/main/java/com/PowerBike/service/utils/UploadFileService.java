@@ -1,4 +1,4 @@
-package com.PowerBike.utils.moreUtils;
+package com.PowerBike.service.utils;
 
 import com.PowerBike.repository.ProductRepository;
 import org.springframework.beans.factory.DisposableBean;

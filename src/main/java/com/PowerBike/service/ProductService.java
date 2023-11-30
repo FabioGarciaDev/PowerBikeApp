@@ -3,7 +3,7 @@ package com.PowerBike.service;
 import com.PowerBike.dto.ProductDto;
 import com.PowerBike.entity.Product;
 import com.PowerBike.repository.ProductRepository;
-import com.PowerBike.utils.moreUtils.UploadFileService;
+import com.PowerBike.service.utils.UploadFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

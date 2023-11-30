@@ -1,4 +1,4 @@
-package com.PowerBike.controller;
+package com.PowerBike.controller.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
