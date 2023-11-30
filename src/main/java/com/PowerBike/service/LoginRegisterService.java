@@ -56,12 +56,12 @@ public class LoginRegisterService {
 
         //Construccion del user para almacenar en la BD
         UserEntity userEntity = UserEntity.builder()
-                .name(request.getName())
-                .lastname(request.getLastname())
-                .secondLastname(request.getSecondLastname())
+                .name(request.getName().toUpperCase())
+                .lastname(request.getLastname().toUpperCase())
+                .secondLastname(request.getSecondLastname().toUpperCase())
                 .documentType(request.getDocumentType())
                 .documentNumber(request.getDocumentNumber())
-                .email(request.getEmail())
+                .email(request.getEmail().toLowerCase())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .gender(request.getGender())
                 .phoneNumber(request.getPhoneNumber())
