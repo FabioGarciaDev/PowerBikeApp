@@ -58,8 +58,18 @@ public class UserEntityService {
         return new ResponseEntity<>("No se pudo eliminar, usuario no existe", HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<?> existUser(long id) {
-        return new ResponseEntity<>(userRepository.existsById(id), HttpStatus.OK);
+    public ResponseEntity<?> activeDesactiveUser(long id) {
+        if (userRepository.existsById(id)) {
+            UserEntity user = userRepository.findById(id).get();
+            if (user.isActiveUser()){
+                user.setActiveUser(false);
+            }else{
+                user.setActiveUser(true);
+            }
+            userRepository.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("El usuario no existe", HttpStatus.NOT_FOUND);
     }
 
 }

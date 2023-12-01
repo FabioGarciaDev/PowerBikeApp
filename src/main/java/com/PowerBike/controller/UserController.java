@@ -42,4 +42,11 @@ public class UserController {
         return userEntityService.updateUser(id, dto);
     }
 
+    //Activar o desactivar user
+    @PutMapping("activeDesactive/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> activeDesactiveProduct(@PathVariable long id){
+        return userEntityService.activeDesactiveUser(id);
+    }
+
 }
