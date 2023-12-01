@@ -9,6 +9,7 @@ import com.PowerBike.entity.UserEntity;
 import com.PowerBike.repository.OrderRepository;
 import com.PowerBike.repository.ProductRepository;
 import com.PowerBike.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,51 +54,69 @@ public class OrderService {
 
     public ResponseEntity<?> createOrder(OrderDto orderDTO) {
         Optional<UserEntity> optional = userRepository.findById(orderDTO.getClientId());
-        List<OrderDetailsDto> orderDetailsList = orderDTO.getOrderDetails();
-        List<OrderDetails> orderDetailToAdd = new ArrayList<>();
-
-        if (optional.isPresent()) {
-            UserEntity client = optional.get();
-            OrderEntity order = OrderEntity.builder()
-                    .client(client)
-                    .orderDate(LocalDateTime.now())
-                    .shippingAddress(orderDTO.getShippingAddress())
-                    .totalPaid(orderDTO.getTotalPaid())
-                    .commentsForDelivery(orderDTO.getCommentsForDelivery())
-                    .statusOrder("CREATED")
-                    .build();
-
-            //itero la lista de productos y creo los details y los lamaceno en una lista
-            if (orderDetailsList != null && !orderDetailsList.isEmpty()) {
-                for (OrderDetailsDto orderDetailsDto : orderDetailsList) {
-                    OrderDetails orderDetails = createOrderDetails(order, orderDetailsDto.getProductId(), orderDetailsDto.getQuantity());
-                    orderDetailToAdd.add(orderDetails);
-                }
-            }
-            // Agregar los detalles de pedido a la orden
-            order.setOrderDetails(orderDetailToAdd);
-
-            orderRepository.save(order);
-            return new ResponseEntity<>("Pedido creado correctamente", HttpStatus.OK);
+        if (!optional.isPresent()) {
+            return new ResponseEntity<>("El usuario no existe", HttpStatus.BAD_REQUEST);
         }
+        UserEntity client = optional.get();
+        List<OrderDetailsDto> orderDetailsList = orderDTO.getOrderDetails();
+        List<OrderDetails> orderDetailsToAdd;
+        BigDecimal totalPriceOrder = BigDecimal.valueOf(0);
+        //Creo la orden
+        OrderEntity order = OrderEntity.builder()
+                .client(client)
+                .orderDate(LocalDateTime.now())
+                .shippingAddress(orderDTO.getShippingAddress())
+                .totalPaid(orderDTO.getTotalPaid())
+                .commentsForDelivery(orderDTO.getCommentsForDelivery())
+                .statusOrder("CREATED")
+                .build();
+        //Creo la lista de detalles
+        orderDetailsToAdd = createListOrderDetails(order, orderDetailsList);
+        if (orderDetailsToAdd == null || orderDetailsToAdd.isEmpty()) {
+            return new ResponseEntity<>("Stock de producto insuficiente", HttpStatus.BAD_REQUEST);
+        }
+        //calculo el total de los productos para el total de la orden
+        for (OrderDetails details : orderDetailsToAdd) {
+            totalPriceOrder = totalPriceOrder.add(details.getTotalPrice());
+        }
+        // Agrego la lista de details y el precio total a la order
+        order.setOrderDetails(orderDetailsToAdd);
+        order.setTotalPaid(totalPriceOrder);
 
-        return new ResponseEntity<>("Error al crear el pedido", HttpStatus.BAD_REQUEST);
+        orderRepository.save(order);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+
     }
 
-    //Metodo para settear la order details
-    private OrderDetails createOrderDetails(OrderEntity order, Long idProduct, int quantity) {
-        Product product = productRepository.findById(idProduct)
-                .orElseThrow();
-        BigDecimal discountValue =
-                (product.getPrice().multiply(product.getDiscount()).divide(BigDecimal.valueOf(100)));
-        return OrderDetails.builder()
-                .orderEntity(order)
-                .product(product)
-                .quantity(quantity)
-                .unitPrice(product.getPrice())
-                .discountPercentage(product.getDiscount())
-                .cashValue(discountValue)
-                .totalPrice((product.getPrice().subtract(discountValue)).multiply(BigDecimal.valueOf(quantity)))
-                .build();
+    //Metodo para crear la lista de los details de la orden
+    @Transactional
+    public List<OrderDetails> createListOrderDetails(OrderEntity order, List<OrderDetailsDto> detailsList) {
+        List<OrderDetails> listToAdd = new ArrayList<>();
+        if (detailsList != null && !detailsList.isEmpty()) {
+            for (OrderDetailsDto detail : detailsList) {
+                int quantityProductDetails = detail.getQuantity();
+                Product product = productRepository.findById(detail.getProductId())
+                        .orElseThrow();
+                if (product.getStock() < quantityProductDetails) {
+                    return null;
+                }
+                BigDecimal discountValue =
+                        (product.getPrice().multiply(product.getDiscount()).divide(BigDecimal.valueOf(100)));
+
+                OrderDetails orderDetail = OrderDetails.builder()
+                        .orderEntity(order)
+                        .product(product)
+                        .quantity(quantityProductDetails)
+                        .unitPrice(product.getPrice())
+                        .discountPercentage(product.getDiscount())
+                        .cashValue(discountValue)
+                        .totalPrice((product.getPrice().subtract(discountValue)).multiply(BigDecimal.valueOf(detail.getQuantity())))
+                        .build();
+                listToAdd.add(orderDetail);
+                product.setStock(product.getStock() - quantityProductDetails);
+                productRepository.save(product);
+            }
+        }
+        return listToAdd;
     }
 }

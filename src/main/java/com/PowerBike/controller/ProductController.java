@@ -6,6 +6,7 @@ import com.PowerBike.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/getAll")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getAllProducts() {
         return productService.getAllProducts();
     }
@@ -28,12 +30,14 @@ public class ProductController {
     }
 
     @GetMapping("/getProduct/{id}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public ResponseEntity<?> getProduct(@PathVariable long id) {
         return productService.getProductById(id);
     }
 
     @PostMapping(value = "/save")
-    public ResponseEntity<?> saveCategory(@ModelAttribute ProductDto dto) throws IOException {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> saveProduct(@ModelAttribute ProductDto dto) throws IOException {
         if (productService.isValidFile(dto.getImage())) {
             return productService.saveProduct(dto);
         }
@@ -41,7 +45,8 @@ public class ProductController {
     }
 
     @PutMapping(value = "/update/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable long id, @ModelAttribute ProductDto dto) throws IOException {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> updateProduct(@PathVariable long id, @ModelAttribute ProductDto dto) throws IOException {
         if (productService.isValidFile(dto.getImage())) {
             return productService.updateProduct(id, dto);
         }
@@ -49,12 +54,13 @@ public class ProductController {
     }
 
     @PutMapping(value = "/desactive/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> desactiveProduct(@PathVariable long id) {
         return productService.desactiveProduct(id);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable long id) {
         return productService.deleteProduct(id);
     }
 }
