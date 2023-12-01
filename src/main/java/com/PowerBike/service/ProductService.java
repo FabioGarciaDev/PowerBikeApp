@@ -88,7 +88,7 @@ public class ProductService {
             product.setStock(dto.getStock());
             product.setDiscount(dto.getDiscount());
 
-            if (!dto.getImage().isEmpty() && !product.getImage().equals(defaultImage)){
+            if (dto.getImage() != null || !dto.getImage().isEmpty() || !product.getImage().equals(defaultImage)) {
                 uploadFileService.deleteImage(product.getImage());
                 String newImage = uploadFileService.saveImage(dto.getImage());
                 product.setImage(newImage);
