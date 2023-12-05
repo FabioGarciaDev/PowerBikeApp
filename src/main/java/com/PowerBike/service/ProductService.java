@@ -37,7 +37,7 @@ public class ProductService {
             return new ResponseEntity<>("No hay productos registrados", HttpStatus.NOT_FOUND);
         }
         List<Product> productsStore = products.stream()
-                .filter(product -> product.getStock()>0 && product.getActiveProduct())
+                .filter(product -> product.getStock() > 0 && product.getActiveProduct())
                 .collect(Collectors.toList());
         return new ResponseEntity<>(productsStore, HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class ProductService {
     public ResponseEntity<?> deleteProduct(long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
-            if (!product.getImage().equals(defaultImage)){
+            if (!product.getImage().equals(defaultImage)) {
                 uploadFileService.deleteImage(product.getImage());
             }
             productRepository.deleteById(id);
@@ -88,23 +88,29 @@ public class ProductService {
             product.setStock(dto.getStock());
             product.setDiscount(dto.getDiscount());
 
-            if (dto.getImage() != null || !dto.getImage().isEmpty() || !product.getImage().equals(defaultImage)) {
+            if (dto.getImage() == null) {
+                productRepository.save(product);
+            } else {
+                if (isValidFile(dto.getImage())){
                 uploadFileService.deleteImage(product.getImage());
                 String newImage = uploadFileService.saveImage(dto.getImage());
                 product.setImage(newImage);
+                productRepository.save(product);
+                }else{
+                    return new ResponseEntity<>("El tipo de archivo debe ser JPG, JPEG o PNG", HttpStatus.BAD_REQUEST);
+                }
             }
-            productRepository.save(product);
             return new ResponseEntity<>("Se ha actualizado el producto ".concat(dto.getProductName()), HttpStatus.OK);
         }
         return new ResponseEntity<>("Error de solicitud", HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<?> desactiveProduct(long id) {
-        if (productRepository.existsByIdProducts(id)){
+        if (productRepository.existsByIdProducts(id)) {
             Product product = productRepository.findById(id).get();
-            if (product.getActiveProduct()){
+            if (product.getActiveProduct()) {
                 product.setActiveProduct(false);
-            }else{
+            } else {
                 product.setActiveProduct(true);
             }
             productRepository.save(product);

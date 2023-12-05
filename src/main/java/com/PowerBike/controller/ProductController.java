@@ -47,10 +47,7 @@ public class ProductController {
     @PutMapping(value = "/update/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> updateProduct(@PathVariable long id, @ModelAttribute ProductDto dto) throws IOException {
-        if (productService.isValidFile(dto.getImage()) || dto.getImage()==null) {
-            return productService.updateProduct(id, dto);
-        }
-        return new ResponseEntity<>("El tipo de archivo debe ser JPG, JPEG o PNG", HttpStatus.BAD_REQUEST);
+        return productService.updateProduct(id, dto);
     }
 
     @PutMapping(value = "/desactive/{id}")
