@@ -37,4 +37,10 @@ public class OrderController {
         return orderService.createOrder(dto);
     }
 
+    @PutMapping(value = "/updateStatus/{idOrder}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long idOrder, @RequestBody OrderDto dto) {
+        return orderService.updateStatusOrder(idOrder, dto.getStatusOrder());
+    }
+
 }

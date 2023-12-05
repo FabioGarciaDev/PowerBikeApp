@@ -34,7 +34,7 @@ public class OrderService {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> getOrder(long id) {
+    public ResponseEntity<?> getOrder(Long id) {
         Optional<OrderEntity> product = orderRepository.findById(id);
         if (product.isPresent()) {
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -42,7 +42,7 @@ public class OrderService {
         return new ResponseEntity<>("La orden no existe", HttpStatus.NOT_FOUND);
     }
 
-    public ResponseEntity<?> getOrdersbyClient(long id) {
+    public ResponseEntity<?> getOrdersbyClient(Long id) {
         Optional<UserEntity> clientOptional = userRepository.findById(id);
         if (clientOptional.isPresent()) {
             UserEntity client = clientOptional.get();
@@ -88,6 +88,28 @@ public class OrderService {
 
     }
 
+    public ResponseEntity<?> updateStatusOrder(Long idOrder, String status) {
+        OrderEntity order = orderRepository.findById(idOrder).orElseThrow(null);
+        String newStatus = status.toUpperCase();
+        if (isValidStatus(newStatus) && order!=null){
+            if ("CANCELADO".equals(newStatus)) {
+                returnProducts(order.getOrderDetails());
+                order.setStatusOrder(newStatus);
+                orderRepository.save(order);
+                return new ResponseEntity<>(order, HttpStatus.OK);
+            } else if ("PAGADO".equals(newStatus) || "DESPACHADO".equals(status)) {
+                if (order.getStatusOrder().equals("CANCELADO")){
+                    return new ResponseEntity<>("No es posible modificar una order CANCELADA", HttpStatus.BAD_REQUEST);
+                }
+                order.setStatusOrder(newStatus);
+                orderRepository.save(order);
+                return new ResponseEntity<>(order, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>("La orden con ID " + idOrder + " no existe o el estado proporcionado no es válido", HttpStatus.NOT_FOUND);
+
+    }
+
     //Metodo para crear la lista de los details de la orden
     @Transactional
     public List<OrderDetails> createListOrderDetails(OrderEntity order, List<OrderDetailsDto> detailsList) {
@@ -118,5 +140,19 @@ public class OrderService {
             }
         }
         return listToAdd;
+    }
+
+    private void returnProducts(List<OrderDetails> orderDetails) {
+        for (OrderDetails detail : orderDetails) {
+            Product product = productRepository.findById(detail.getProduct().getIdProducts()).get();
+            product.setStock(product.getStock() + detail.getQuantity());
+            productRepository.save(product);
+        }
+    }
+
+    private boolean isValidStatus(String status) {
+        // Por ejemplo, verificar que el estado sea uno de los valores permitidos (creado, cancelado, pagado, despachado)
+        List<String> allowedStatusList = List.of("CREADO", "CANCELADO", "PAGADO", "DESPACHADO");
+        return allowedStatusList.contains(status.toUpperCase());
     }
 }
