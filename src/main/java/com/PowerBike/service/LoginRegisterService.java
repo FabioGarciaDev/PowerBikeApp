@@ -32,6 +32,12 @@ public class LoginRegisterService {
                 ,request.getPassword()));
         UserDetails user=userRepository.findByEmail(request.getUsername()).orElseThrow();
         UserEntity userEntity = userRepository.findByEmail(request.getUsername()).orElseThrow();
+        if (!userEntity.isActiveUser()){
+            return AuthResponseDto.builder()
+                    .message("El usuario se encuentra desactivado")
+                    .name(userEntity.getName())
+                    .build();
+        }
         String token=jwtService.getToken(user);
         return AuthResponseDto.builder()
                 .message("Inicio de sesion correcto")

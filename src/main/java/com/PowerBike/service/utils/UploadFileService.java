@@ -75,7 +75,7 @@ public class UploadFileService implements DisposableBean {
             if (ImagesInFolder != null) {
                 for (File image : ImagesInFolder) {
                     String nameImage = image.getName();
-                    if (!productRepository.existsByImage(nameImage) && !nameImage.equals("default.jpg")) {
+                    if (!productRepository.existsByImage(nameImage) && !nameImage.equalsIgnoreCase("default.jpg")) {
                         image.delete();
                         System.out.println("Imagen eliminada: " + nameImage);
                     }

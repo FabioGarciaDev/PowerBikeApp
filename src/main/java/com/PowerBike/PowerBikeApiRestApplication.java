@@ -35,7 +35,7 @@ public class PowerBikeApiRestApplication {
             String emailFabito = "fabinho1080@hotmail.com";
 
             if (userRepository.existsByEmail(emailFabito)) {
-                System.out.println("el usuario existe");
+                System.out.println("el usuario admin existe");
             }else {
                 UserEntity userEntity = UserEntity.builder()
                         .name("Fabito")
