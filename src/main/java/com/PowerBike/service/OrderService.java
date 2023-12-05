@@ -107,7 +107,6 @@ public class OrderService {
             }
         }
         return new ResponseEntity<>("La orden con ID " + idOrder + " no existe o el estado proporcionado no es válido", HttpStatus.NOT_FOUND);
-
     }
 
     //Metodo para crear la lista de los details de la orden

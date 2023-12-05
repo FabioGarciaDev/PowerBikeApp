@@ -65,7 +65,7 @@ public class ProductService {
 
     public ResponseEntity<?> saveProduct(ProductDto dto) throws IOException {
         //Guardar imagen producto
-        String nameFile = uploadFileService.saveImage(dto.getImage());
+        String nameFile = uploadFileService.saveImageWebP(dto.getImage());
         Product product = Product.builder()
                 .productName(dto.getProductName())
                 .description(dto.getDescription())
@@ -93,7 +93,7 @@ public class ProductService {
             } else {
                 if (isValidFile(dto.getImage())){
                 uploadFileService.deleteImage(product.getImage());
-                String newImage = uploadFileService.saveImage(dto.getImage());
+                String newImage = uploadFileService.saveImageWebP(dto.getImage());
                 product.setImage(newImage);
                 productRepository.save(product);
                 }else{
