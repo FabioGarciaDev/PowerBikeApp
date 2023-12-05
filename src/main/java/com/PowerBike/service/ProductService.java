@@ -100,9 +100,13 @@ public class ProductService {
     }
 
     public ResponseEntity<?> desactiveProduct(long id) {
-        Product product = productRepository.findById(id).orElse(null);
-        if (product != null) {
-            product.setActiveProduct(false);
+        if (productRepository.existsByIdProducts(id)){
+            Product product = productRepository.findById(id).get();
+            if (product.getActiveProduct()){
+                product.setActiveProduct(false);
+            }else{
+                product.setActiveProduct(true);
+            }
             productRepository.save(product);
             return new ResponseEntity<>("El producto se ha desactivado correctamente", HttpStatus.OK);
         }
